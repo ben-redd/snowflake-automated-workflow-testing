@@ -1,0 +1,149 @@
+fileVersion: 1
+id: 2e1e775e-314d-4606-b5b9-9188c727384a
+name: MART_PREDICTIVE_ANALYTICS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Predictive analytics mart with forecasting and trend analysis
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-e171486dee9c
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PREDICTION_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY CS.CUSTOMER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-e5c817ebd758
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-e84cdccdb1c8
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PREDICTED_LTV
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.RFM_MONETARY_SCORE * 1.2 + (CS.BEHAVIORAL_SCORE * 1000)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-ef36b8450308
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CHURN_PROBABILITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN CS.RFM_RECENCY_SCORE > 180 THEN 0.7 WHEN CS.RFM_RECENCY_SCORE > 90 THEN 0.4 ELSE 0.1 END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-f1a7db3347dc
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DEMAND_FORECAST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(FP.GROSS_REVENUE) * (1 + PL.SEASONAL_INDEX)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-f5e366336f19
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RISK_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN AVG(FP.MARGIN_PERCENTAGE) < 10 THEN 5 WHEN AVG(FP.MARGIN_PERCENTAGE) < 20 THEN 3 ELSE 1 END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-f81b5e370bf9
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: GROWTH_POTENTIAL
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN CS.SEGMENT_TIER = 'PREMIUM' AND PL.LIFECYCLE_STAGE = 'GROWTH' THEN 'HIGH' WHEN CS.SEGMENT_TIER = 'GOLD' THEN 'MEDIUM' ELSE 'LOW' END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-c050-74c8-87a9-feab7e21a50d
+          stepCounter: 2e1e775e-314d-4606-b5b9-9188c727384a
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DO.CUSTOMER_REGION
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_DAILY_OPERATIONS
+          - locationName: TARGET
+            nodeName: FACT_FINANCIAL_PERFORMANCE
+          - locationName: TARGET
+            nodeName: STG_CUSTOMER_SEGMENTATION
+          - locationName: TARGET
+            nodeName: STG_PRODUCT_LIFECYCLE
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_CUSTOMER_SEGMENTATION') }} CS
+            LEFT JOIN {{ ref('TARGET', 'STG_PRODUCT_LIFECYCLE') }} PL ON CS.CUSTOMER_KEY = PL.PART_KEY
+            LEFT JOIN {{ ref('TARGET', 'FACT_FINANCIAL_PERFORMANCE') }} FP ON CS.CUSTOMER_KEY = FP.CUSTOMER_KEY
+            LEFT JOIN {{ ref('TARGET', 'AGG_DAILY_OPERATIONS') }} DO ON FP.ORDER_DATE = DO.OPERATION_DATE
+            GROUP BY CS.CUSTOMER_KEY, CS.SEGMENT_TIER, PL.LIFECYCLE_STAGE, DO.CUSTOMER_REGION
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_PREDICTIVE_ANALYTICS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

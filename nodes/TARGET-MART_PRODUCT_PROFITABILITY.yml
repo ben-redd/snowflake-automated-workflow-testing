@@ -1,0 +1,143 @@
+fileVersion: 1
+id: becce876-59e6-4c89-88d3-078c5f51d299
+name: MART_PRODUCT_PROFITABILITY
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Product profitability analysis with cost and revenue metrics
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-88ff-ef925901bf9e
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.PART_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-88ff-f220bb6cc99d
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_BRAND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: I.PART_BRAND
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-88ff-f505d905f0b4
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_QUANTITY_SOLD
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(S.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-88ff-fa96c5092adf
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(S.NET_REVENUE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-88ff-fc34cdfd8ba1
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_SUPPLY_COST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(I.SUPPLY_COST)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-8900-00dc98dede1d
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ESTIMATED_COGS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(S.QUANTITY) * AVG(I.SUPPLY_COST)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-8900-041396aec054
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: GROSS_PROFIT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(S.NET_REVENUE) - (SUM(S.QUANTITY) * AVG(I.SUPPLY_COST))
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ced3-748b-8900-0a933ecfa018
+          stepCounter: becce876-59e6-4c89-88d3-078c5f51d299
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PROFIT_MARGIN
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: (SUM(S.NET_REVENUE) - (SUM(S.QUANTITY) * AVG(I.SUPPLY_COST))) / SUM(S.NET_REVENUE)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: FACT_INVENTORY
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_SALES_DETAIL') }} S
+            JOIN {{ ref('TARGET', 'FACT_INVENTORY') }} I ON S.PART_KEY = I.PART_KEY
+            GROUP BY S.PART_KEY, I.PART_BRAND
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_PRODUCT_PROFITABILITY
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

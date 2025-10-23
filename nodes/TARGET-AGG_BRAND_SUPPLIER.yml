@@ -1,0 +1,128 @@
+fileVersion: 1
+id: 9a838f55-ebca-4e22-9db2-62c442e088a4
+name: AGG_BRAND_SUPPLIER
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Brand-supplier relationships with cost and availability metrics
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-4cda-7310-bce3-0743e481c92f
+          stepCounter: 9a838f55-ebca-4e22-9db2-62c442e088a4
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_BRAND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.PART_BRAND
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-4cda-7310-bce3-0a9db5778a87
+          stepCounter: 9a838f55-ebca-4e22-9db2-62c442e088a4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-4cda-7310-bce3-0e3114982b89
+          stepCounter: 9a838f55-ebca-4e22-9db2-62c442e088a4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: UNIQUE_PARTS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT PS.PART_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-4cda-7310-bce3-11399fa79cce
+          stepCounter: 9a838f55-ebca-4e22-9db2-62c442e088a4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_AVAILABLE_QTY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(PS.AVAILABLE_QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-4cda-7310-bce3-1464dad0c491
+          stepCounter: 9a838f55-ebca-4e22-9db2-62c442e088a4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_SUPPLY_COST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(PS.SUPPLY_COST)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-4cda-7310-bce3-1b73ab00eda5
+          stepCounter: 9a838f55-ebca-4e22-9db2-62c442e088a4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MIN_SUPPLY_COST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MIN(PS.SUPPLY_COST)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-4cda-7310-bce3-1d153118fc2c
+          stepCounter: 9a838f55-ebca-4e22-9db2-62c442e088a4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MAX_SUPPLY_COST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MAX(PS.SUPPLY_COST)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: STG_PART_SUPPLIER
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_PART_SUPPLIER') }} PS
+            GROUP BY PS.PART_BRAND, PS.SUPPLIER_KEY
+        name: STG_NODE
+        noLinkRefs: []
+  name: AGG_BRAND_SUPPLIER
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

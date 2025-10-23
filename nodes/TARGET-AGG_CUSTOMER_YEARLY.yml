@@ -1,0 +1,155 @@
+fileVersion: 1
+id: d068454f-b89a-4b06-9e2e-c949cac65d67
+name: AGG_CUSTOMER_YEARLY
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Customer spending patterns aggregated by year and tier
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc5-70f8-a34c-d08d5116d47b
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc5-70f8-a34c-d4d856d7ac79
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc5-70f8-a34c-db70bc0ea653
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.NATION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc5-70f8-a34c-dcab9d37b4a4
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_TIER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc5-70f8-a34c-e0d7d1155d0d
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_YEAR
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc6-75da-addb-b1c27827bcac
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(O.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc6-75da-addb-b48348420413
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_SPENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(O.TOTAL_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc6-75da-addb-b848cd03223b
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(O.TOTAL_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-2cc6-75da-addb-be3d4bfbedb4
+          stepCounter: d068454f-b89a-4b06-9e2e-c949cac65d67
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MAX_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MAX(O.TOTAL_PRICE)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: STG_ACTIVE_CUSTOMERS
+          - locationName: TARGET
+            nodeName: STG_ORDERS_FILTERED
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_ORDERS_FILTERED') }} O
+            JOIN {{ ref('TARGET', 'STG_ACTIVE_CUSTOMERS') }} C ON O.CUSTOMER_KEY = C.CUSTOMER_KEY
+            GROUP BY O.CUSTOMER_KEY, C.CUSTOMER_NAME, C.NATION_NAME, C.CUSTOMER_TIER, O.ORDER_YEAR
+        name: STG_NODE
+        noLinkRefs: []
+  name: AGG_CUSTOMER_YEARLY
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

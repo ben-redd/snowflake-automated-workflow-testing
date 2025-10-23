@@ -1,0 +1,143 @@
+fileVersion: 1
+id: 4c740af8-6016-456a-9e64-bada54656d19
+name: STG_REVENUE_FILTERED
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Filtered revenue data for 1995 with specific discount and quantity criteria
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-1fb69cc48d75
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.ORDER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-2074b59b5922
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.PART_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-27673ccc68e0
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-29b07123b2df
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: EXTENDED_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.EXTENDED_PRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-2c4af138d0d3
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DISCOUNT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.DISCOUNT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-31305d536bc7
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: POTENTIAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.EXTENDED_PRICE * L.DISCOUNT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-363c269db97f
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: DATE
+        description: ""
+        name: SHIP_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.SHIP_DATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-d3fc-700e-91e9-39196b2642bc
+          stepCounter: 4c740af8-6016-456a-9e64-bada54656d19
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_NATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.SUPPLIER_NATION
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: STG_LINEITEM_ENRICHED
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_LINEITEM_ENRICHED') }} L
+            WHERE L.SHIP_DATE >= '1995-01-01' 
+              AND L.SHIP_DATE < '1996-01-01'
+              AND L.DISCOUNT BETWEEN 0.05 AND 0.07
+              AND L.QUANTITY < 24
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_REVENUE_FILTERED
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

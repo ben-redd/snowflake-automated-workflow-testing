@@ -1,0 +1,146 @@
+fileVersion: 1
+id: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+name: AGG_MONTHLY_SALES
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Monthly sales aggregation by supplier nation and part brand
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-8210cc896742
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: DATE
+        description: ""
+        name: SHIP_MONTH
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DATE_TRUNC('MONTH', L.SHIP_DATE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-8734b7d43fe0
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_NATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.SUPPLIER_NATION
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-8a8e9809cfeb
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_BRAND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.PART_BRAND
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-8cc1623b77c0
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_QUANTITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(L.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-92a0f38754d8
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(L.NET_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-9728663b1cc4
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_COUNT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT L.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-98f67e3117f0
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ORDER_SIZE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(L.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-c1f2-718f-ad7b-9e1cb90baa95
+          stepCounter: 496f445f-e3fa-4ae2-8e1d-583fa10bd2e5
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MAX_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MAX(L.NET_PRICE)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: ORDERS
+          - locationName: TARGET
+            nodeName: STG_LINEITEM_ENRICHED
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_LINEITEM_ENRICHED') }} L
+            JOIN {{ ref('SRC', 'ORDERS') }} O ON L.ORDER_KEY = O.O_ORDERKEY
+            GROUP BY 
+                DATE_TRUNC('MONTH', L.SHIP_DATE),
+                L.SUPPLIER_NATION,
+                L.PART_BRAND
+        name: STG_NODE
+        noLinkRefs: []
+  name: AGG_MONTHLY_SALES
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

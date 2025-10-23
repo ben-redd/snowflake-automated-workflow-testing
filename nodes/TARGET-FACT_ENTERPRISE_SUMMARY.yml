@@ -1,0 +1,192 @@
+fileVersion: 1
+id: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+name: FACT_ENTERPRISE_SUMMARY
+operation:
+  config:
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+  database: ""
+  deployEnabled: true
+  description: Enterprise-level summary fact combining all business intelligence layers
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-09e73ee2215d
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ENTERPRISE_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY MD.REGION_NAME, MD.HIERARCHICAL_LEVEL)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-0dd18d7f234c
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: BUSINESS_UNIT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MD.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-12f92ad7815b
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: OPERATIONAL_COMPLEXITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MD.HIERARCHICAL_LEVEL * AVG(CC.COMPLEXITY_SCORE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-140172c58e92
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: STRATEGIC_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(CM.STRATEGIC_IMPORTANCE * MA.OPTIMIZATION_TARGET)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-1b859ea50d04
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ENTERPRISE_RISK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(MA.ANOMALY_SCORE * RA.RISK_SCORE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-1e55aef9845f
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PERFORMANCE_COMPOSITE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: WEIGHTED_AVG(CM.PERFORMANCE_INDEX, CM.RISK_ADJUSTED_PROFIT)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-218067988ec2
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: EXECUTIVE_KPI
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ED.TOTAL_REVENUE * (1 - RA.RISK_PROBABILITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-26a28e4a8a1e
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TRANSFORMATION_INDEX
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: LOG(MD.AGGREGATED_ML_SCORE + 1) * SQRT(ABS(MD.WEIGHTED_PREDICTION))
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-791a-777d-8121-29a1d06d44ff
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: TIMESTAMP
+        description: ""
+        name: LAST_UPDATED
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CURRENT_TIMESTAMP()
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: cc3cf867-7c3a-49f3-be2c-c9568a68b42e
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isSystemCreateDate: true
+        name: SYSTEM_CREATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 7e2c9c98-a249-4edc-ab04-81af4bce8d17
+          stepCounter: fd24acd5-1a53-4ed1-8935-146339f4cbfc
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isSystemUpdateDate: true
+        name: SYSTEM_UPDATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_MULTI_DIMENSIONAL
+          - locationName: TARGET
+            nodeName: FACT_COMPREHENSIVE_METRICS
+          - locationName: TARGET
+            nodeName: MART_ADVANCED_ANALYTICS
+          - locationName: TARGET
+            nodeName: MART_EXECUTIVE_DASHBOARD
+          - locationName: TARGET
+            nodeName: MART_RISK_ANALYSIS
+          - locationName: TARGET
+            nodeName: STG_COMPLEX_CALCULATIONS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'AGG_MULTI_DIMENSIONAL') }} MD
+            LEFT JOIN {{ ref('TARGET', 'MART_ADVANCED_ANALYTICS') }} MA ON MD.DIMENSION_KEY = MA.ANALYTICS_KEY
+            LEFT JOIN {{ ref('TARGET', 'FACT_COMPREHENSIVE_METRICS') }} CM ON MA.SEGMENT_TIER = CM.CUSTOMER_SEGMENT_TIER
+            LEFT JOIN {{ ref('TARGET', 'STG_COMPLEX_CALCULATIONS') }} CC ON MA.SEGMENT_TIER = CC.SEGMENT_TIER
+            LEFT JOIN {{ ref('TARGET', 'MART_EXECUTIVE_DASHBOARD') }} ED ON MD.REGION_NAME = ED.REGION_NAME
+            LEFT JOIN {{ ref('TARGET', 'MART_RISK_ANALYSIS') }} RA ON CM.CUSTOMER_SEGMENT_TIER = RA.RISK_CATEGORY
+        name: FCT_NODE
+        noLinkRefs: []
+  name: FACT_ENTERPRISE_SUMMARY
+  overrideSQL: false
+  schema: ""
+  sqlType: Fact
+  type: sql
+  version: 1
+type: Node

@@ -1,0 +1,150 @@
+fileVersion: 1
+id: 0d27b376-45bc-476a-b2c8-9729f8affb34
+name: STG_CUSTOMER_SEGMENTATION
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Advanced customer segmentation with RFM analysis and behavioral scoring
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-18dcd802aced
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-1d6fc713b38e
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-2120b80360d6
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RFM_RECENCY_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DATEDIFF('day', MAX(F.SHIP_DATE), CURRENT_DATE())
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-26ff01abdb77
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RFM_FREQUENCY_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-2ba5fdb1dc71
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RFM_MONETARY_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.EXTENDED_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-2deb8ea7619d
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: BEHAVIORAL_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN COUNT(DISTINCT F.ORDER_KEY) > 10 THEN 5 WHEN COUNT(DISTINCT F.ORDER_KEY) > 5 THEN 3 ELSE 1 END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-336f089aa242
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SEGMENT_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN SUM(F.EXTENDED_PRICE) > 100000 THEN 'PREMIUM' WHEN SUM(F.EXTENDED_PRICE) > 50000 THEN 'GOLD' ELSE 'STANDARD' END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-22a4-779b-be69-37cdcf08e566
+          stepCounter: 0d27b376-45bc-476a-b2c8-9729f8affb34
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.NATION_NAME
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          A: d068454f-b89a-4b06-9e2e-c949cac65d67
+          C: d853a8fe-3ea0-4306-a4b5-555f23879dde
+          F: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_CUSTOMER_YEARLY
+          - locationName: TARGET
+            nodeName: DIM_CUSTOMER
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'DIM_CUSTOMER') }} C
+            LEFT JOIN {{ ref('TARGET', 'FACT_SALES_DETAIL') }} F ON C.CUSTOMER_KEY = F.CUSTOMER_KEY
+            LEFT JOIN {{ ref('TARGET', 'AGG_CUSTOMER_YEARLY') }} A ON C.CUSTOMER_KEY = A.CUSTOMER_KEY
+            WHERE C.MARKET_SEGMENT IS NOT NULL
+            GROUP BY C.CUSTOMER_KEY, C.CUSTOMER_NAME, C.MARKET_SEGMENT, C.NATION_NAME
+        name: STG_CUSTOMER_SEGMENTATION
+        noLinkRefs: []
+  name: STG_CUSTOMER_SEGMENTATION
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

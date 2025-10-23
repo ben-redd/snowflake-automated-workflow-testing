@@ -1,0 +1,181 @@
+fileVersion: 1
+id: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+name: FACT_INVENTORY
+operation:
+  config:
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+  database: ""
+  deployEnabled: true
+  description: Inventory fact table tracking part availability and costs
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-7fe2269b44fb
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: true
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.PART_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-82ffaa3bcaf1
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: true
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-8733624c34cb
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: AVAILABLE_QUANTITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.AVAILABLE_QUANTITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-89d430cce09e
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: SUPPLY_COST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.SUPPLY_COST
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-8df979073c8b
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: TOTAL_INVENTORY_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.AVAILABLE_QUANTITY * PS.SUPPLY_COST
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-912ed058c668
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: PART_BRAND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.BRAND
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-9413c63a02d1
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: SUPPLIER_NATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.NATION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-9990-74ba-8c0c-9a57d563af97
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: SUPPLIER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: cf49fd92-31bf-4745-9875-af2c766aafaa
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemCreateDate: true
+        name: SYSTEM_CREATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 380f1edb-ae83-48c9-ad4a-d87934e58e8a
+          stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemUpdateDate: true
+        name: SYSTEM_UPDATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: DIM_PART
+          - locationName: TARGET
+            nodeName: DIM_SUPPLIER
+          - locationName: TARGET
+            nodeName: STG_PART_SUPPLIER
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_PART_SUPPLIER') }} PS
+            JOIN {{ ref('TARGET', 'DIM_PART') }} P ON PS.PART_KEY = P.PART_KEY
+            JOIN {{ ref('TARGET', 'DIM_SUPPLIER') }} S ON PS.SUPPLIER_KEY = S.SUPPLIER_KEY
+        name: FCT_NODE
+        noLinkRefs: []
+  name: FACT_INVENTORY
+  overrideSQL: false
+  schema: ""
+  sqlType: Fact
+  type: sql
+  version: 1
+type: Node

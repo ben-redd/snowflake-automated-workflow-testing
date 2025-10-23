@@ -1,0 +1,131 @@
+fileVersion: 1
+id: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+name: MART_EXECUTIVE_DASHBOARD
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Executive dashboard with key business metrics and KPIs
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-5004-754c-bf51-2f95a8af3e6e
+          stepCounter: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: BUSINESS_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: Q.ORDER_YEAR
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-5004-754c-bf51-32eb843141fc
+          stepCounter: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ANNUAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(Q.TOTAL_REVENUE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-5004-754c-bf51-368a31c91449
+          stepCounter: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ANNUAL_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(Q.TOTAL_ORDERS)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-5004-754c-bf51-3b5939fa970a
+          stepCounter: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ACTIVE_CUSTOMERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(Q.UNIQUE_CUSTOMERS)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-5004-754c-bf51-3dbafbef0ef3
+          stepCounter: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: GLOBAL_REGIONS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT R.REGION_NAME)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-5004-754c-bf51-419e85843e9d
+          stepCounter: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(Q.TOTAL_REVENUE) / SUM(Q.TOTAL_ORDERS)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-5004-754c-bf51-45102a12e763
+          stepCounter: 739b804a-72b7-4e7f-98d8-d39ad5e8a604
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: REVENUE_GROWTH_RATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: (SUM(Q.TOTAL_REVENUE) - LAG(SUM(Q.TOTAL_REVENUE)) OVER (ORDER BY Q.ORDER_YEAR)) / LAG(SUM(Q.TOTAL_REVENUE)) OVER (ORDER BY Q.ORDER_YEAR)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: MART_QUARTERLY_TRENDS
+          - locationName: TARGET
+            nodeName: MART_REGIONAL_PERFORMANCE
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'MART_QUARTERLY_TRENDS') }} Q
+            JOIN {{ ref('TARGET', 'MART_REGIONAL_PERFORMANCE') }} R ON 1=1
+            GROUP BY Q.ORDER_YEAR
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_EXECUTIVE_DASHBOARD
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

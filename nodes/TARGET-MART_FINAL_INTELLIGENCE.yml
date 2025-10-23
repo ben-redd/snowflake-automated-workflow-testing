@@ -1,0 +1,155 @@
+fileVersion: 1
+id: d846dc5b-3eb4-4388-a810-7f0e4d894216
+name: MART_FINAL_INTELLIGENCE
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Final business intelligence mart with complete data lineage and maximum complexity
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a197-e54d3e38d222
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: INTELLIGENCE_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY ES.BUSINESS_UNIT, MA.SEGMENT_TIER, MD.HIERARCHICAL_LEVEL)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a197-ea089a91f636
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: BUSINESS_UNIT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ES.BUSINESS_UNIT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a197-ed90e8950305
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: FINAL_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: WEIGHTED_AVG(IP.INTENSIVE_CALC_1, ES.STRATEGIC_VALUE) * AVG(MA.OPTIMIZATION_TARGET)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a197-f1e2f31d1fed
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ULTIMATE_PREDICTION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MA.ENSEMBLE_PREDICTION + PA.PREDICTED_LTV + IP.RECURSIVE_METRIC
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a197-f71f0ed25186
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: COMPREHENSIVE_RISK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SQRT(POWER(ES.ENTERPRISE_RISK, 2) + POWER(PA.CHURN_PROBABILITY * 100, 2))
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a197-f91670ccd810
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MAXIMUM_COMPLEXITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: IP.COMPUTATIONAL_LOAD * CC.COMPLEXITY_SCORE * MD.AGGREGATED_ML_SCORE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a197-fc2623645a6a
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_BUSINESS_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(ES.EXECUTIVE_KPI + IP.CROSS_JOIN_AGGREGATE + MA.OPTIMIZATION_TARGET)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-ba34-70da-a198-0051e311fd68
+          stepCounter: d846dc5b-3eb4-4388-a810-7f0e4d894216
+        config: {}
+        dataType: TIMESTAMP
+        description: ""
+        name: PROCESSING_TIMESTAMP
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CURRENT_TIMESTAMP()
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_MULTI_DIMENSIONAL
+          - locationName: TARGET
+            nodeName: FACT_ENTERPRISE_SUMMARY
+          - locationName: TARGET
+            nodeName: MART_ADVANCED_ANALYTICS
+          - locationName: TARGET
+            nodeName: MART_PREDICTIVE_ANALYTICS
+          - locationName: TARGET
+            nodeName: STG_COMPLEX_CALCULATIONS
+          - locationName: TARGET
+            nodeName: STG_INTENSIVE_PROCESSING
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_INTENSIVE_PROCESSING') }} IP
+            LEFT JOIN {{ ref('TARGET', 'FACT_ENTERPRISE_SUMMARY') }} ES ON IP.PROCESSING_KEY = ES.ENTERPRISE_KEY
+            LEFT JOIN {{ ref('TARGET', 'MART_ADVANCED_ANALYTICS') }} MA ON ES.BUSINESS_UNIT = MA.SEGMENT_TIER
+            LEFT JOIN {{ ref('TARGET', 'AGG_MULTI_DIMENSIONAL') }} MD ON ES.ENTERPRISE_KEY = MD.DIMENSION_KEY
+            LEFT JOIN {{ ref('TARGET', 'STG_COMPLEX_CALCULATIONS') }} CC ON MA.SEGMENT_TIER = CC.SEGMENT_TIER
+            LEFT JOIN {{ ref('TARGET', 'MART_PREDICTIVE_ANALYTICS') }} PA ON MA.ANALYTICS_KEY = PA.PREDICTION_KEY
+            GROUP BY ES.BUSINESS_UNIT, MA.SEGMENT_TIER, MD.HIERARCHICAL_LEVEL
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_FINAL_INTELLIGENCE
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

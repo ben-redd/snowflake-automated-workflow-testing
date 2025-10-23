@@ -1,0 +1,131 @@
+fileVersion: 1
+id: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+name: AGG_ORDER_METRICS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Aggregated order metrics by customer and nation
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-7ca3-7280-aa30-a099f4504649
+          stepCounter: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-7ca3-7280-aa30-a61ef0822e06
+          stepCounter: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.CUSTOMER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-7ca3-7280-aa30-a83e856cedb4
+          stepCounter: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.NATION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-7ca3-7280-aa30-ace869eb4afb
+          stepCounter: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: MARKET_SEGMENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.MARKET_SEGMENT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-7ca3-7280-aa30-b2e9d720327d
+          stepCounter: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(O.O_ORDERKEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-7ca3-7280-aa30-b693f3cc205c
+          stepCounter: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(O.O_TOTALPRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-7ca3-7280-aa30-bb57878f3500
+          stepCounter: 0b74482a-6e6c-4ab8-b716-0e6e3a2ccf13
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(O.O_TOTALPRICE)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: ORDERS
+          - locationName: TARGET
+            nodeName: STG_CUSTOMER_SUMMARY
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_CUSTOMER_SUMMARY') }} CS
+            JOIN {{ ref('SRC', 'ORDERS') }} O ON CS.CUSTOMER_KEY = O.O_CUSTKEY
+            GROUP BY CS.CUSTOMER_KEY, CS.CUSTOMER_NAME, CS.NATION_NAME, CS.MARKET_SEGMENT
+        name: STG_NODE1
+        noLinkRefs: []
+  name: AGG_ORDER_METRICS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

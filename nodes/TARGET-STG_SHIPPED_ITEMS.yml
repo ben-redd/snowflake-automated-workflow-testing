@@ -1,0 +1,153 @@
+fileVersion: 1
+id: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+name: STG_SHIPPED_ITEMS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Shipped line items with delivery performance metrics
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-da9259cf61c9
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_ORDERKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-ddd44231f7fc
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_PARTKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-e238ec0818c8
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_SUPPKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-e598b4005f4f
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: QUANTITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_QUANTITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-e970671caf9c
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: EXTENDED_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_EXTENDEDPRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-eeb4fba1e6e3
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DISCOUNT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_DISCOUNT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-f3b29d32e0da
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: DATE
+        description: ""
+        name: SHIP_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_SHIPDATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-f68468483b2c
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SHIP_MODE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.L_SHIPMODE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-ec47-706c-b252-fa7a35ebf26f
+          stepCounter: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DAYS_TO_SHIP
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DATEDIFF(DAY, L.L_COMMITDATE, L.L_SHIPDATE)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: LINEITEM
+        join:
+          joinCondition: |-
+            FROM {{ ref('SRC', 'LINEITEM') }} L
+            WHERE L.L_SHIPDATE <= '1998-12-01'
+              AND L.L_LINESTATUS = 'F'
+        name: STG_NODE1
+        noLinkRefs: []
+  name: STG_SHIPPED_ITEMS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

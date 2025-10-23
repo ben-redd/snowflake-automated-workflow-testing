@@ -1,0 +1,174 @@
+fileVersion: 1
+id: 910f4ab5-0bf4-4941-8dc8-068c21157652
+name: STG_PRODUCT_LIFECYCLE
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Product lifecycle analysis with seasonality and trend detection
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bace-f29c4eb105a0
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11c9-aea6-7068-b773-ee45b502938c
+                stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+            transform: P.PART_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bace-f58983f07b61
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11c9-aea6-7068-b773-f394073a06b5
+                stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+            transform: P.PART_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bace-f8497e7a8724
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: LIFECYCLE_STAGE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-d209f9f5e3e9
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-892c-7389-80bb-d209f9f5e3e9
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: CASE WHEN COUNT(S.ORDER_KEY) > 100 THEN 'MATURE' WHEN COUNT(S.ORDER_KEY) > 20 THEN 'GROWTH' ELSE 'INTRODUCTION' END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bace-fe2f0f2279dc
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SEASONAL_INDEX
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e756745f2799
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-892c-7389-80bb-e756745f2799
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: AVG(S.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bacf-035e57cbb899
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TREND_INDICATOR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: SUM(S.EXTENDED_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bacf-071a2e003f8a
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: INVENTORY_VELOCITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e756745f2799
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-9990-74ba-8c0c-8733624c34cb
+                stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+            transform: SUM(S.QUANTITY) * 1.0 / NULLIF(AVG(I.AVAILABLE_QUANTITY), 0)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bacf-0b129e6eb9b7
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: QUARTER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-7b59-7521-aa94-ca55b206285b
+                stepCounter: e6af582a-197e-4397-a514-6da473a5af3d
+            transform: "1"
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-3af9-7478-bacf-0d300d53d719
+          stepCounter: 910f4ab5-0bf4-4941-8dc8-068c21157652
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-7b59-7521-aa94-c5873f767616
+                stepCounter: e6af582a-197e-4397-a514-6da473a5af3d
+            transform: YEAR(CURRENT_DATE())
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          I: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+          P: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+          S: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: DIM_PART
+          - locationName: TARGET
+            nodeName: FACT_INVENTORY
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'DIM_PART') }} P
+            LEFT JOIN {{ ref('TARGET', 'FACT_SALES_DETAIL') }} S ON P.PART_KEY = S.PART_KEY
+            LEFT JOIN {{ ref('TARGET', 'FACT_INVENTORY') }} I ON P.PART_KEY = I.PART_KEY
+            WHERE P.BRAND IS NOT NULL
+            GROUP BY P.PART_KEY, P.PART_NAME, P.BRAND, P.PART_TYPE
+        name: STG_PRODUCT_LIFECYCLE
+        noLinkRefs: []
+  name: STG_PRODUCT_LIFECYCLE
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

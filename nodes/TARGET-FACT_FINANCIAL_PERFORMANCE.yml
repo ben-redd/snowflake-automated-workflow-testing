@@ -1,0 +1,275 @@
+fileVersion: 1
+id: 09e336d9-e84b-40a3-9628-10d251e0b885
+name: FACT_FINANCIAL_PERFORMANCE
+operation:
+  config:
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+  database: ""
+  deployEnabled: true
+  description: Comprehensive financial performance fact with profitability and cost analysis
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-16be7795a5e2
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: FINANCIAL_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY S.ORDER_KEY, S.PART_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-18aab8b9b22b
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-d209f9f5e3e9
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: S.ORDER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-1f81b2a5b332
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-d4bfd163be27
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: S.PART_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-23c6519f9d3d
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-da193e99e790
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: S.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-27165ff29c91
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-dd6df9b882cd
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: S.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-288ddf216061
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: GROSS_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: S.EXTENDED_PRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-2d772747787f
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: COST_OF_GOODS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-9990-74ba-8c0c-89d430cce09e
+                stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+              - columnCounter: 019a11cc-892c-7389-80bb-e756745f2799
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: I.SUPPLY_COST * S.QUANTITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-33d354a9988f
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: GROSS_PROFIT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-9990-74ba-8c0c-89d430cce09e
+                stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+              - columnCounter: 019a11cc-892c-7389-80bb-e756745f2799
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: S.EXTENDED_PRICE - (I.SUPPLY_COST * S.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-379f5960007a
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MARGIN_PERCENTAGE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-9990-74ba-8c0c-89d430cce09e
+                stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+              - columnCounter: 019a11cc-892c-7389-80bb-e756745f2799
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: (S.EXTENDED_PRICE - (I.SUPPLY_COST * S.QUANTITY)) * 100.0 / NULLIF(S.EXTENDED_PRICE, 0)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-38a6dfa368fd
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLY_CHAIN_COST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COALESCE(SC.COST_EFFICIENCY_RATIO, 1.0) * S.QUANTITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-3f6578d3ffea
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: NET_PROFIT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.EXTENDED_PRICE - (I.SUPPLY_COST * S.QUANTITY) - (COALESCE(SC.COST_EFFICIENCY_RATIO, 1.0) * S.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-4361eded6f9f
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PROFITABILITY_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-9990-74ba-8c0c-89d430cce09e
+                stepCounter: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+              - columnCounter: 019a11cc-892c-7389-80bb-e756745f2799
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: CASE WHEN S.EXTENDED_PRICE > 0 THEN ((S.EXTENDED_PRICE - (I.SUPPLY_COST * S.QUANTITY)) / S.EXTENDED_PRICE) * 100 ELSE 0 END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-8830-745b-8467-44f105fa9220
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: DATE
+        description: ""
+        name: ORDER_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e1c626053e72
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: S.SHIP_DATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: ea929b5d-ca53-4517-b966-64ff82eeda04
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isSystemCreateDate: true
+        name: SYSTEM_CREATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: e7e80ea1-79e4-471e-a13d-5db5f8deedff
+          stepCounter: 09e336d9-e84b-40a3-9628-10d251e0b885
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isSystemUpdateDate: true
+        name: SYSTEM_UPDATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          I: d4a73f42-cbb9-45ee-aa4d-1750d16e3046
+          S: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+          SC: 96d22ee3-7842-4805-a648-22b30f43e062
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: FACT_INVENTORY
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+          - locationName: TARGET
+            nodeName: STG_SUPPLY_CHAIN_METRICS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_SALES_DETAIL') }} S
+            LEFT JOIN {{ ref('TARGET', 'FACT_INVENTORY') }} I ON S.PART_KEY = I.PART_KEY AND S.SUPPLIER_KEY = I.SUPPLIER_KEY
+            LEFT JOIN {{ ref('TARGET', 'STG_SUPPLY_CHAIN_METRICS') }} SC ON S.SUPPLIER_KEY = SC.SUPPLIER_KEY
+            WHERE S.EXTENDED_PRICE > 0
+        name: FACT_FINANCIAL_PERFORMANCE
+        noLinkRefs: []
+  name: FACT_FINANCIAL_PERFORMANCE
+  overrideSQL: false
+  schema: ""
+  sqlType: Fact
+  type: sql
+  version: 1
+type: Node

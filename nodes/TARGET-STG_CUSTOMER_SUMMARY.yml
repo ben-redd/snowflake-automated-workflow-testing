@@ -1,0 +1,106 @@
+fileVersion: 1
+id: 5d842339-4f66-4ba4-9b6e-7e79d3aee258
+name: STG_CUSTOMER_SUMMARY
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Staging table with customer summary information
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-693c-7199-a235-dd7402064e20
+          stepCounter: 5d842339-4f66-4ba4-9b6e-7e79d3aee258
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.C_CUSTKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-693c-7199-a235-e0de79b98a8a
+          stepCounter: 5d842339-4f66-4ba4-9b6e-7e79d3aee258
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.C_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-693c-7199-a235-e5225bc219d6
+          stepCounter: 5d842339-4f66-4ba4-9b6e-7e79d3aee258
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: N.N_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-693c-7199-a235-e88556896d4a
+          stepCounter: 5d842339-4f66-4ba4-9b6e-7e79d3aee258
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ACCOUNT_BALANCE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.C_ACCTBAL
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c8-693c-7199-a235-ef4cb1dc3723
+          stepCounter: 5d842339-4f66-4ba4-9b6e-7e79d3aee258
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: MARKET_SEGMENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.C_MKTSEGMENT
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: CUSTOMER
+          - locationName: SRC
+            nodeName: NATION
+        join:
+          joinCondition: |-
+            FROM {{ ref('SRC', 'CUSTOMER') }} C
+            JOIN {{ ref('SRC', 'NATION') }} N ON C.C_NATIONKEY = N.N_NATIONKEY
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_CUSTOMER_SUMMARY
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

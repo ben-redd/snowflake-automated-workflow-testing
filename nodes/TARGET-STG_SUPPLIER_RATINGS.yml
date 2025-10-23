@@ -1,0 +1,145 @@
+fileVersion: 1
+id: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+name: STG_SUPPLIER_RATINGS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Supplier performance ratings based on delivery and cost metrics
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-40c77125daf3
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-47ad103ad780
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.SUPPLIER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-499511478c8c
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-4dd0de43cedb
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: COST_COMPETITIVENESS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: BS.AVG_SUPPLY_COST
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-50d9e8b44cb2
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PRODUCT_VARIETY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: BS.UNIQUE_PARTS
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-57b197313817
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: INVENTORY_CAPACITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: BS.TOTAL_AVAILABLE_QTY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-5a2dad7a15d3
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PERFORMANCE_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: (BS.UNIQUE_PARTS * 0.3) + (BS.TOTAL_AVAILABLE_QTY * 0.0001) + ((1000 - BS.AVG_SUPPLY_COST) * 0.01)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-2ad9-718f-b48d-5f7f66313e3a
+          stepCounter: 1d6eaea4-7df2-4204-86e8-e65826e746e2
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_GRADE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN (BS.UNIQUE_PARTS * 0.3) + (BS.TOTAL_AVAILABLE_QTY * 0.0001) + ((1000 - BS.AVG_SUPPLY_COST) * 0.01) > 50 THEN 'A' WHEN (BS.UNIQUE_PARTS * 0.3) + (BS.TOTAL_AVAILABLE_QTY * 0.0001) + ((1000 - BS.AVG_SUPPLY_COST) * 0.01) > 25 THEN 'B' ELSE 'C' END
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_BRAND_SUPPLIER
+          - locationName: TARGET
+            nodeName: AGG_SHIPPING_PERFORMANCE
+          - locationName: TARGET
+            nodeName: DIM_SUPPLIER
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'DIM_SUPPLIER') }} S
+            JOIN {{ ref('TARGET', 'AGG_SHIPPING_PERFORMANCE') }} SP ON 1=1
+            JOIN {{ ref('TARGET', 'AGG_BRAND_SUPPLIER') }} BS ON S.SUPPLIER_KEY = BS.SUPPLIER_KEY
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_SUPPLIER_RATINGS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

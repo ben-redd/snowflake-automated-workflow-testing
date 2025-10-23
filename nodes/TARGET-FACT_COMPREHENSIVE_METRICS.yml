@@ -1,0 +1,228 @@
+fileVersion: 1
+id: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+name: FACT_COMPREHENSIVE_METRICS
+operation:
+  config:
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+  database: ""
+  deployEnabled: true
+  description: Comprehensive business metrics fact combining all analytical dimensions
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b0-7002-a6a9-402a4e86b025
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: COMPREHENSIVE_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY FP.FINANCIAL_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd3f-f2631de2c2fd
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: FINANCIAL_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: FP.FINANCIAL_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd3f-f7e46604c61f
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: FP.ORDER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd3f-f9e5394ae358
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_SEGMENT_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.SEGMENT_TIER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd3f-fc72ed825b75
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_BEHAVIORAL_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.BEHAVIORAL_SCORE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd40-0015bf7bd16a
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_RELIABILITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SC.RELIABILITY_SCORE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd40-07f38a4f4ee0
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MARKET_POSITION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CA.MARKET_SHARE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd40-095dd45522d3
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PREDICTED_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PA.PREDICTED_LTV
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd40-0e8f6a757a5d
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RISK_ADJUSTED_PROFIT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: FP.NET_PROFIT * (1 - PA.CHURN_PROBABILITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd40-100c28d259b3
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: STRATEGIC_IMPORTANCE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN CS.SEGMENT_TIER = 'PREMIUM' AND CA.MARKET_SHARE > 20 THEN 5 WHEN CS.SEGMENT_TIER = 'GOLD' THEN 3 ELSE 1 END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd40-1772cf45daf4
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PERFORMANCE_INDEX
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: (FP.PROFITABILITY_SCORE + SC.RELIABILITY_SCORE + CA.MARKET_SHARE) / 3
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-f2b1-71ce-bd40-18525799ebaa
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: DATE
+        description: ""
+        name: ORDER_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: FP.ORDER_DATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 16dad26b-e0af-4c99-a887-1c651841029f
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isSystemCreateDate: true
+        name: SYSTEM_CREATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: cca6a31b-ff98-467f-a143-3057874bdb98
+          stepCounter: dbd8f402-80cb-44d1-8ecb-a48c244f3856
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isSystemUpdateDate: true
+        name: SYSTEM_UPDATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_COMPETITIVE_ANALYSIS
+          - locationName: TARGET
+            nodeName: DIM_DATE
+          - locationName: TARGET
+            nodeName: FACT_FINANCIAL_PERFORMANCE
+          - locationName: TARGET
+            nodeName: MART_PREDICTIVE_ANALYTICS
+          - locationName: TARGET
+            nodeName: STG_CUSTOMER_SEGMENTATION
+          - locationName: TARGET
+            nodeName: STG_SUPPLY_CHAIN_METRICS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_FINANCIAL_PERFORMANCE') }} FP
+            LEFT JOIN {{ ref('TARGET', 'STG_CUSTOMER_SEGMENTATION') }} CS ON FP.CUSTOMER_KEY = CS.CUSTOMER_KEY
+            LEFT JOIN {{ ref('TARGET', 'STG_SUPPLY_CHAIN_METRICS') }} SC ON FP.SUPPLIER_KEY = SC.SUPPLIER_KEY
+            LEFT JOIN {{ ref('TARGET', 'AGG_COMPETITIVE_ANALYSIS') }} CA ON FP.PART_KEY = CA.PART_TYPE
+            LEFT JOIN {{ ref('TARGET', 'MART_PREDICTIVE_ANALYTICS') }} PA ON FP.CUSTOMER_KEY = PA.CUSTOMER_KEY
+            LEFT JOIN {{ ref('TARGET', 'DIM_DATE') }} D ON FP.ORDER_DATE = D.DATE_KEY
+        name: FCT_NODE
+        noLinkRefs: []
+  name: FACT_COMPREHENSIVE_METRICS
+  overrideSQL: false
+  schema: ""
+  sqlType: Fact
+  type: sql
+  version: 1
+type: Node

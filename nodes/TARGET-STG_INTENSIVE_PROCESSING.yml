@@ -1,0 +1,150 @@
+fileVersion: 1
+id: 132bf657-251f-46cf-847c-84765bd56815
+name: STG_INTENSIVE_PROCESSING
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Computationally intensive staging with recursive calculations and heavy aggregations
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-00c6b65ce07b
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PROCESSING_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY ES.BUSINESS_UNIT, CM.CUSTOMER_SEGMENT_TIER)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-058e4a44df7e
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: INTENSIVE_CALC_1
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(ES.TRANSFORMATION_INDEX * CM.PERFORMANCE_INDEX * CC.COMPLEXITY_SCORE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-095f1bc8d40b
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: INTENSIVE_CALC_2
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: POWER(AVG(ES.OPERATIONAL_COMPLEXITY), 2) + SQRT(SUM(CM.RISK_ADJUSTED_PROFIT))
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-0cccc2b6e6f6
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RECURSIVE_METRIC
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: LAG(SUM(ES.STRATEGIC_VALUE)) OVER (PARTITION BY ES.BUSINESS_UNIT ORDER BY CM.CUSTOMER_SEGMENT_TIER) + SUM(ES.STRATEGIC_VALUE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-1206606981cc
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CROSS_JOIN_AGGREGATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT CM.COMPREHENSIVE_KEY) * AVG(ES.PERFORMANCE_COMPOSITE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-15a6f643c576
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: HEAVY_WINDOW_CALC
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(CC.EXPONENTIAL_SMOOTHING) OVER (PARTITION BY ES.BUSINESS_UNIT ORDER BY CM.CUSTOMER_SEGMENT_TIER ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-1bc9acae0f53
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: NESTED_AGGREGATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(SUM(ES.ENTERPRISE_RISK) OVER (PARTITION BY CC.SEGMENT_TIER))
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-9d13-76b3-8ef7-1f9a3f2cb4f5
+          stepCounter: 132bf657-251f-46cf-847c-84765bd56815
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: COMPUTATIONAL_LOAD
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: FACTORIAL(LEAST(MD.HIERARCHICAL_LEVEL, 10)) + EXP(LN(ABS(ES.TRANSFORMATION_INDEX) + 1))
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_MULTI_DIMENSIONAL
+          - locationName: TARGET
+            nodeName: FACT_COMPREHENSIVE_METRICS
+          - locationName: TARGET
+            nodeName: FACT_ENTERPRISE_SUMMARY
+          - locationName: TARGET
+            nodeName: STG_COMPLEX_CALCULATIONS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_ENTERPRISE_SUMMARY') }} ES
+            CROSS JOIN {{ ref('TARGET', 'FACT_COMPREHENSIVE_METRICS') }} CM
+            LEFT JOIN {{ ref('TARGET', 'STG_COMPLEX_CALCULATIONS') }} CC ON ES.BUSINESS_UNIT = CC.SEGMENT_TIER
+            LEFT JOIN {{ ref('TARGET', 'AGG_MULTI_DIMENSIONAL') }} MD ON ES.ENTERPRISE_KEY = MD.DIMENSION_KEY
+            WHERE ES.STRATEGIC_VALUE > 1000
+            GROUP BY ES.BUSINESS_UNIT, CM.CUSTOMER_SEGMENT_TIER, CC.SEGMENT_TIER
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_INTENSIVE_PROCESSING
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node
