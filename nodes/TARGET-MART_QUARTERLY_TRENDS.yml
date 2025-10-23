@@ -1,0 +1,140 @@
+fileVersion: 1
+id: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+name: MART_QUARTERLY_TRENDS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Quarterly business trends with year-over-year comparisons
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-c44cf6d13a6c
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_YEAR
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-c9adf8ffe548
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_QUARTER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_QUARTER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-cc97bd7ca95c
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: QUARTER_LABEL
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CONCAT(O.ORDER_YEAR, '-Q', O.ORDER_QUARTER)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-d30b2ca8c3d2
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(O.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-d7d1a0760613
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(O.TOTAL_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-d98cea9892ae
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: UNIQUE_CUSTOMERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT O.CUSTOMER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-dfd5c09d73e4
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(O.TOTAL_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-e15b-75f7-88ba-e00346b2069f
+          stepCounter: 0647dcca-e46a-492e-899c-b9e9a8e6f825
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: HIGH_PRIORITY_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(CASE WHEN O.ORDER_PRIORITY IN ('1-URGENT', '2-HIGH') THEN 1 ELSE 0 END)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: STG_ORDERS_FILTERED
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_ORDERS_FILTERED') }} O
+            GROUP BY O.ORDER_YEAR, O.ORDER_QUARTER
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_QUARTERLY_TRENDS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

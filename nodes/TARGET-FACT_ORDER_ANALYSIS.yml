@@ -1,0 +1,291 @@
+fileVersion: 1
+id: ebc67b59-ee22-40e4-b197-70eea6b2d265
+name: FACT_ORDER_ANALYSIS
+operation:
+  config:
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+  database: ""
+  deployEnabled: true
+  description: Comprehensive fact table for order analysis with customer, supplier, and part metrics
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-4498f9462c5f
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: true
+        name: ORDER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-48d6ab1e778a
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-4e5f24cdbc8b
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-511b9310ed49
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: true
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.PART_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-57fd8d67f322
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: DATE
+        description: ""
+        isBusinessKey: false
+        name: ORDER_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERDATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-594316025254
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: ORDER_STATUS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERSTATUS
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-5ddd394e1c21
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: ORDER_PRIORITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERPRIORITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-63fe5d5f7ecd
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: DATE
+        description: ""
+        isBusinessKey: false
+        name: SHIP_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.SHIP_DATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-65d7a116dfa7
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: QUANTITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.QUANTITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-6952de65e0a1
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: EXTENDED_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.EXTENDED_PRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-6c40afa81d40
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: DISCOUNT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.DISCOUNT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-7128aa229e74
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: TAX
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.TAX
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-75c277a44a81
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: NET_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: L.NET_PRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-79a69789e91a
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: CUSTOMER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-7d4bd0bd3627
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: SUPPLIER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-0717-779c-a075-810e0ffea0df
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: PART_CATEGORY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.PART_CATEGORY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: cfade556-df59-4061-852f-4466e3072ed2
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemCreateDate: true
+        name: SYSTEM_CREATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 2b79d6ac-5474-4f71-9d58-061005d05956
+          stepCounter: ebc67b59-ee22-40e4-b197-70eea6b2d265
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemUpdateDate: true
+        name: SYSTEM_UPDATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: ORDERS
+          - locationName: TARGET
+            nodeName: DIM_CUSTOMER
+          - locationName: TARGET
+            nodeName: DIM_PART
+          - locationName: TARGET
+            nodeName: DIM_SUPPLIER
+          - locationName: TARGET
+            nodeName: STG_LINEITEM_ENRICHED
+        join:
+          joinCondition: |-
+            FROM {{ ref('SRC', 'ORDERS') }} O
+            JOIN {{ ref('TARGET', 'DIM_CUSTOMER') }} C ON O.O_CUSTKEY = C.CUSTOMER_KEY
+            JOIN {{ ref('TARGET', 'STG_LINEITEM_ENRICHED') }} L ON O.O_ORDERKEY = L.ORDER_KEY
+            JOIN {{ ref('TARGET', 'DIM_SUPPLIER') }} S ON L.SUPPLIER_KEY = S.SUPPLIER_KEY
+            JOIN {{ ref('TARGET', 'DIM_PART') }} P ON L.PART_KEY = P.PART_KEY
+        name: FCT_NODE
+        noLinkRefs: []
+  name: FACT_ORDER_ANALYSIS
+  overrideSQL: false
+  schema: ""
+  sqlType: Fact
+  type: sql
+  version: 1
+type: Node

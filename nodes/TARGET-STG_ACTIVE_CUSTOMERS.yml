@@ -1,0 +1,116 @@
+fileVersion: 1
+id: 4d77c2fe-e52c-4599-b257-294931a23079
+name: STG_ACTIVE_CUSTOMERS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Active customers with positive account balances and tier classification
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-fb4a-76ae-9b2f-47af0a270b7e
+          stepCounter: 4d77c2fe-e52c-4599-b257-294931a23079
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-fb4a-76ae-9b2f-4a127b676f68
+          stepCounter: 4d77c2fe-e52c-4599-b257-294931a23079
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.CUSTOMER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-fb4a-76ae-9b2f-4c4656398488
+          stepCounter: 4d77c2fe-e52c-4599-b257-294931a23079
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.NATION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-fb4a-76ae-9b2f-52dd85595a75
+          stepCounter: 4d77c2fe-e52c-4599-b257-294931a23079
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ACCOUNT_BALANCE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.ACCOUNT_BALANCE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-fb4a-76ae-9b2f-5777746626e3
+          stepCounter: 4d77c2fe-e52c-4599-b257-294931a23079
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: MARKET_SEGMENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CS.MARKET_SEGMENT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-fb4a-76ae-9b2f-5a575bcfd22c
+          stepCounter: 4d77c2fe-e52c-4599-b257-294931a23079
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN CS.ACCOUNT_BALANCE > 5000 THEN 'PREMIUM' WHEN CS.ACCOUNT_BALANCE > 1000 THEN 'STANDARD' ELSE 'BASIC' END
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: STG_CUSTOMER_SUMMARY
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_CUSTOMER_SUMMARY') }} CS
+            WHERE CS.ACCOUNT_BALANCE > 0
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_ACTIVE_CUSTOMERS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

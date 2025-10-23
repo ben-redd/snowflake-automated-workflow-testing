@@ -1,0 +1,262 @@
+fileVersion: 1
+id: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+name: DIM_PART
+operation:
+  config:
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+  database: ""
+  deployEnabled: true
+  description: Part dimension with categorized size information
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea6-7068-b773-ee45b502938c
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: true
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_PARTKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea6-7068-b773-f394073a06b5
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: PART_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea6-7068-b773-f7d1bc49dd94
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: MANUFACTURER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_MFGR
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea7-75c7-9fa7-392877f2c1f2
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: BRAND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_BRAND
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea7-75c7-9fa7-3cdef49e1761
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: PART_TYPE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_TYPE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea7-75c7-9fa7-42cb74759dcb
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: SIZE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_SIZE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea7-75c7-9fa7-454ae31294b1
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: CONTAINER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_CONTAINER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea7-75c7-9fa7-4886f6e70c1c
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: NUMBER
+        description: ""
+        isBusinessKey: false
+        name: RETAIL_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_RETAILPRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11c9-aea7-75c7-9fa7-4d0d51e6b81c
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        isBusinessKey: false
+        name: PART_CATEGORY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN P.P_SIZE <= 10 THEN 'SMALL' WHEN P.P_SIZE <= 30 THEN 'MEDIUM' ELSE 'LARGE' END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: b3429688-88de-4a32-973b-796abfc27f3e
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: NUMBER
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSurrogateKey: true
+        name: DIM_NODE2_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 7a455b9f-8f4d-4fcf-b59f-e06ab9c6004a
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: NUMBER
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemVersion: true
+        name: SYSTEM_VERSION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 1a99a61a-1167-4555-8cde-dd0437efa9fc
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: VARCHAR
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemCurrentFlag: true
+        name: SYSTEM_CURRENT_FLAG
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ""
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 2afa5e39-59b8-4e9d-98fa-05467857aac2
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemStartDate: true
+        name: SYSTEM_START_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: d59de606-e437-4e2f-8412-6685597f243f
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemEndDate: true
+        name: SYSTEM_END_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST('2999-12-31 00:00:00' AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 2cf040ac-520d-4180-be94-4448c594cd1a
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemCreateDate: true
+        name: SYSTEM_CREATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: e8baa4a8-d7c3-4735-959d-890900d9a8a3
+          stepCounter: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+        config: {}
+        dataType: TIMESTAMP
+        defaultValue: ""
+        description: ""
+        isBusinessKey: false
+        isSystemUpdateDate: true
+        name: SYSTEM_UPDATE_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CAST(CURRENT_TIMESTAMP AS TIMESTAMP)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: PART
+        join:
+          joinCondition: FROM {{ ref('SRC', 'PART') }} P
+        name: DIM_NODE2
+        noLinkRefs: []
+  name: DIM_PART
+  overrideSQL: false
+  schema: ""
+  sqlType: Dimension
+  type: sql
+  version: 1
+type: Node

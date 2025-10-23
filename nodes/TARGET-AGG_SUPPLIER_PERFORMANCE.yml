@@ -1,0 +1,155 @@
+fileVersion: 1
+id: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+name: AGG_SUPPLIER_PERFORMANCE
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Supplier performance metrics aggregated by region and year
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-4ce96a3ec49c
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: F.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-50b86903aa91
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: F.SUPPLIER_REGION
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-57e4e80473ea
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: YEAR(F.ORDER_DATE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-5a354c4528ab
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-5cb6cbe131eb
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.NET_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-63550a227168
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_DISCOUNT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(F.DISCOUNT)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-669cd5f01f5a
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_QUANTITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-68d4f6d8b11d
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: UNIQUE_CUSTOMERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.CUSTOMER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11ca-14da-737d-b3e7-6d14cb3e0317
+          stepCounter: 14df5f6f-1d70-4e4b-b430-0f5e8c479941
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ORDER_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(F.NET_PRICE)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: FACT_ORDER_ANALYSIS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_ORDER_ANALYSIS') }} F
+            GROUP BY 
+                F.SUPPLIER_REGION,
+                YEAR(F.ORDER_DATE),
+                F.SUPPLIER_KEY
+        name: STG_NODE
+        noLinkRefs: []
+  name: AGG_SUPPLIER_PERFORMANCE
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

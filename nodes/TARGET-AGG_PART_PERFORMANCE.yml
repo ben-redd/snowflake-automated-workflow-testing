@@ -1,0 +1,141 @@
+fileVersion: 1
+id: e6cb798b-2074-4155-b289-d5fbb7864117
+name: AGG_PART_PERFORMANCE
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Part performance metrics including demand volatility and seasonality
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-da4a7d7907cc
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: F.PART_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-de9ab1fa1c4e
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_CATEGORY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: F.PART_CATEGORY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-e3c596f297c1
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_QUANTITY_SOLD
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-e6b4bc6ca026
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.NET_REVENUE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-eb2ecb681248
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: UNIQUE_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-ec77b904241e
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: UNIQUE_CUSTOMERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.CUSTOMER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-f07684802df8
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_PRICE_PER_UNIT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.NET_REVENUE) / SUM(F.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-3cef-73f2-8d6f-f486be82f19e
+          stepCounter: e6cb798b-2074-4155-b289-d5fbb7864117
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_PENETRATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.CUSTOMER_KEY) / (SELECT COUNT(DISTINCT CUSTOMER_KEY) FROM {{ ref('TARGET', 'FACT_SALES_DETAIL') }})
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          F: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_SALES_DETAIL') }} F
+            GROUP BY F.PART_KEY, F.PART_CATEGORY
+        name: STG_NODE
+        noLinkRefs: []
+  name: AGG_PART_PERFORMANCE
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

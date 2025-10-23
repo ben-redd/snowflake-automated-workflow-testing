@@ -1,0 +1,155 @@
+fileVersion: 1
+id: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+name: STG_HIGH_VALUE_ORDERS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: High-value orders exceeding regional averages with risk flags
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-533d3b89bee4
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-544207e6d543
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-58e5ad09cda4
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: DATE
+        description: ""
+        name: ORDER_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_DATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-5d06821a3e8d
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.TOTAL_PRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-61b28183e1a7
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: ORDER_STATUS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_STATUS
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-640de1f9889f
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-69908d5b0f9f
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: ORDER_PRIORITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_PRIORITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-6d72fd9f9cc0
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: BOOLEAN
+        description: ""
+        name: IS_URGENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.ORDER_PRIORITY = '1-URGENT'
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-0fcd-77a0-9bd8-70f59d264aa7
+          stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PRICE_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN O.TOTAL_PRICE > 500000 THEN 'MEGA' WHEN O.TOTAL_PRICE > 250000 THEN 'LARGE' ELSE 'MEDIUM' END
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: DIM_CUSTOMER
+          - locationName: TARGET
+            nodeName: STG_ORDERS_FILTERED
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_ORDERS_FILTERED') }} O
+            JOIN {{ ref('TARGET', 'DIM_CUSTOMER') }} C ON O.CUSTOMER_KEY = C.CUSTOMER_KEY
+            WHERE O.TOTAL_PRICE > 100000
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_HIGH_VALUE_ORDERS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

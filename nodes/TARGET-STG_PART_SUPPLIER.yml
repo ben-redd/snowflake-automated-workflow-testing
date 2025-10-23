@@ -1,0 +1,133 @@
+fileVersion: 1
+id: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+name: STG_PART_SUPPLIER
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Part-supplier relationships with supply costs and quantities
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-d4fc-773d-8a1a-a07de1d7af90
+          stepCounter: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PART_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.PS_PARTKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-d4fd-703b-ba27-ae21c0946a25
+          stepCounter: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.PS_SUPPKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-d4fd-703b-ba27-b200d5524d62
+          stepCounter: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVAILABLE_QUANTITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.PS_AVAILQTY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-d4fd-703b-ba27-b7402db81833
+          stepCounter: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLY_COST
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PS.PS_SUPPLYCOST
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-d4fd-703b-ba27-b901fa1c348a
+          stepCounter: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-d4fd-703b-ba27-bca7c42f1668
+          stepCounter: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_BRAND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.P_BRAND
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-d4fd-703b-ba27-c07e37b8964d
+          stepCounter: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.S_NAME
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: PART
+          - locationName: SRC
+            nodeName: PARTSUPP
+          - locationName: SRC
+            nodeName: SUPPLIER
+        join:
+          joinCondition: |-
+            FROM {{ ref('SRC', 'PARTSUPP') }} PS
+            JOIN {{ ref('SRC', 'PART') }} P ON PS.PS_PARTKEY = P.P_PARTKEY
+            JOIN {{ ref('SRC', 'SUPPLIER') }} S ON PS.PS_SUPPKEY = S.S_SUPPKEY
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_PART_SUPPLIER
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

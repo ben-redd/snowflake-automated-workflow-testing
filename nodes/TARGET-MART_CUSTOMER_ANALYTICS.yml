@@ -1,0 +1,152 @@
+fileVersion: 1
+id: 57478bd5-8956-4dde-a333-65094f08db90
+name: MART_CUSTOMER_ANALYTICS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Customer analytics mart with lifetime value and segmentation
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-d02054406c7e
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-d7627e59fd75
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-dbce2e831e93
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.NATION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-dd2cb2f2e5ae
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.CUSTOMER_TIER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-e32381ec58f0
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: YEARS_ACTIVE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT C.ORDER_YEAR)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-e7825bac65d2
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: LIFETIME_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(C.TOTAL_ORDERS)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-eb4c140a21b3
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: LIFETIME_VALUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(C.TOTAL_SPENT)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-efa10579b27d
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ANNUAL_SPEND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(C.TOTAL_SPENT)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-ab36-77bc-aabf-f195639465b5
+          stepCounter: 57478bd5-8956-4dde-a333-65094f08db90
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: BEST_YEAR_SPEND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MAX(C.TOTAL_SPENT)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_CUSTOMER_YEARLY
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'AGG_CUSTOMER_YEARLY') }} C
+            GROUP BY C.CUSTOMER_KEY, C.CUSTOMER_NAME, C.NATION_NAME, C.CUSTOMER_TIER
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_CUSTOMER_ANALYTICS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

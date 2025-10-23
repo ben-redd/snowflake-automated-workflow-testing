@@ -1,0 +1,141 @@
+fileVersion: 1
+id: d74db29e-729d-43dd-8a9e-14fc66784946
+name: STG_ORDERS_FILTERED
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Filtered orders for 1995-1997 period with date extractions
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba5-7299-8ce4-6f6b4efbc27b
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba5-7299-8ce4-704ebe41a927
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CUSTOMER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_CUSTKEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba5-7299-8ce4-762787a68275
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: ORDER_STATUS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERSTATUS
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba6-75cc-8dab-a3bf4182d73c
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_TOTALPRICE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba6-75cc-8dab-a6b0f1a591ee
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: DATE
+        description: ""
+        name: ORDER_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERDATE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba6-75cc-8dab-ab74bdfaf182
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: ORDER_PRIORITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: O.O_ORDERPRIORITY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba6-75cc-8dab-aedbc3704798
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: YEAR(O.O_ORDERDATE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cb-dba6-75cc-8dab-b326dcd8e309
+          stepCounter: d74db29e-729d-43dd-8a9e-14fc66784946
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ORDER_QUARTER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: QUARTER(O.O_ORDERDATE)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: SRC
+            nodeName: ORDERS
+        join:
+          joinCondition: |-
+            FROM {{ ref('SRC', 'ORDERS') }} O
+            WHERE O.O_ORDERDATE >= '1995-01-01' 
+              AND O.O_ORDERDATE < '1998-01-01'
+        name: STG_NODE1
+        noLinkRefs: []
+  name: STG_ORDERS_FILTERED
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

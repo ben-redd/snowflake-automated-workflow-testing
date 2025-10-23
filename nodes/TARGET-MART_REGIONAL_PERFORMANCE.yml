@@ -1,0 +1,140 @@
+fileVersion: 1
+id: 0651c84e-526f-4a84-9ace-bd865dc50556
+name: MART_REGIONAL_PERFORMANCE
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Regional performance mart with supplier and customer metrics
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc65-75de-bf19-6aac4bb27841
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: REGION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: F.CUSTOMER_REGION
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc66-76fa-bb8a-537e83f61c11
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_CUSTOMERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.CUSTOMER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc66-76fa-bb8a-541c87e47b06
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_SUPPLIERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.SUPPLIER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc66-76fa-bb8a-59fa7e4b2b40
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(DISTINCT F.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc66-76fa-bb8a-5f0c3c1468e5
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.NET_REVENUE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc66-76fa-bb8a-6313cbaef4c4
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_DISCOUNT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.DISCOUNT_AMOUNT)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc66-76fa-bb8a-6672ba693195
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_ORDER_SIZE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(F.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-bc66-76fa-bb8a-6a8f018e9413
+          stepCounter: 0651c84e-526f-4a84-9ace-bd865dc50556
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: REVENUE_PER_CUSTOMER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(F.NET_REVENUE) / COUNT(DISTINCT F.CUSTOMER_KEY)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_SALES_DETAIL') }} F
+            GROUP BY F.CUSTOMER_REGION
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_REGIONAL_PERFORMANCE
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

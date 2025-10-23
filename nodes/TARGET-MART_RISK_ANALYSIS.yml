@@ -1,0 +1,158 @@
+fileVersion: 1
+id: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+name: MART_RISK_ANALYSIS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Risk analysis mart identifying potential business risks and opportunities
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-b39dac9dc76f
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: REGION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cd-0fcd-77a0-9bd8-640de1f9889f
+                stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+            transform: HV.CUSTOMER_REGION
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-b5a25ba6d6be
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PRICE_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cd-0fcd-77a0-9bd8-70f59d264aa7
+                stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+            transform: HV.PRICE_TIER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-b85a42e4e49f
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: HIGH_VALUE_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cd-0fcd-77a0-9bd8-533d3b89bee4
+                stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+            transform: COUNT(HV.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-bdb1323da036
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_EXPOSURE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cd-0fcd-77a0-9bd8-5d06821a3e8d
+                stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+            transform: SUM(HV.TOTAL_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-c0a1538e103d
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: URGENT_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cd-0fcd-77a0-9bd8-6d72fd9f9cc0
+                stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+            transform: SUM(CASE WHEN HV.IS_URGENT THEN 1 ELSE 0 END)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-c6c56def71a0
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_CUSTOMER_LTV
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(CA.LIFETIME_VALUE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-c80c0013d557
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CONCENTRATION_RISK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cd-0fcd-77a0-9bd8-5d06821a3e8d
+                stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+              - columnCounter: 019a11cd-0fcd-77a0-9bd8-5d06821a3e8d
+                stepCounter: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+            transform: SUM(HV.TOTAL_PRICE) / (SELECT SUM(TOTAL_PRICE) FROM {{ ref('TARGET', 'STG_HIGH_VALUE_ORDERS') }})
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cd-7c08-705b-904b-ced576ffb7ca
+          stepCounter: d9826f99-dbb6-4b1f-ae6b-055d50378c6b
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RISK_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN SUM(HV.TOTAL_PRICE) / (SELECT SUM(TOTAL_PRICE) FROM {{ ref('TARGET', 'STG_HIGH_VALUE_ORDERS') }}) > 0.3 THEN 3 WHEN SUM(HV.TOTAL_PRICE) / (SELECT SUM(TOTAL_PRICE) FROM {{ ref('TARGET', 'STG_HIGH_VALUE_ORDERS') }}) > 0.15 THEN 2 ELSE 1 END
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          HV: 8b21e52a-4fdd-4632-93e1-2b8bccc83548
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: MART_CUSTOMER_ANALYTICS
+          - locationName: TARGET
+            nodeName: STG_HIGH_VALUE_ORDERS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_HIGH_VALUE_ORDERS') }} HV
+            JOIN {{ ref('TARGET', 'MART_CUSTOMER_ANALYTICS') }} CA ON HV.CUSTOMER_KEY = CA.CUSTOMER_KEY
+            GROUP BY HV.CUSTOMER_REGION, HV.PRICE_TIER
+        name: MART_RISK_ANALYSIS
+        noLinkRefs: []
+  name: MART_RISK_ANALYSIS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

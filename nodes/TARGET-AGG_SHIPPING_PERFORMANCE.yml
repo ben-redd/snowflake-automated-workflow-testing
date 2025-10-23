@@ -1,0 +1,140 @@
+fileVersion: 1
+id: 015af02d-ed64-42f7-a94b-1c238203d663
+name: AGG_SHIPPING_PERFORMANCE
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Shipping performance metrics by mode and time period
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-b0c23b82413c
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SHIP_MODE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.SHIP_MODE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-b4056d052a02
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SHIP_YEAR
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: YEAR(S.SHIP_DATE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-b9e359ab677a
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SHIP_QUARTER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: QUARTER(S.SHIP_DATE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-bfe5b3d5495e
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_SHIPMENTS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(*)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-c34883150bd6
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_QUANTITY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(S.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-c6b00a848dee
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: TOTAL_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(S.EXTENDED_PRICE * (1 - S.DISCOUNT))
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-cb17fffbcb60
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_DAYS_TO_SHIP
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(S.DAYS_TO_SHIP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11cc-3def-7191-b4d3-cce14ec94807
+          stepCounter: 015af02d-ed64-42f7-a94b-1c238203d663
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ON_TIME_SHIPMENTS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(CASE WHEN S.DAYS_TO_SHIP <= 0 THEN 1 ELSE 0 END)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: STG_SHIPPED_ITEMS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_SHIPPED_ITEMS') }} S
+            GROUP BY S.SHIP_MODE, YEAR(S.SHIP_DATE), QUARTER(S.SHIP_DATE)
+        name: STG_NODE
+        noLinkRefs: []
+  name: AGG_SHIPPING_PERFORMANCE
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node
