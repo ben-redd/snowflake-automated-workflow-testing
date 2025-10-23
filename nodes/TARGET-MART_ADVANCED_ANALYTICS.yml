@@ -1,0 +1,149 @@
+fileVersion: 1
+id: ba519fc8-2368-4de3-8cb1-da65f288783e
+name: MART_ADVANCED_ANALYTICS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Advanced analytics mart with machine learning features and complex aggregations
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-512ecb27b892
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ANALYTICS_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY CC.SEGMENT_TIER, PA.GROWTH_POTENTIAL)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-56ba5f5d85e5
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SEGMENT_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CC.SEGMENT_TIER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-5ba6e304d0be
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ML_FEATURE_1
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(CC.STATISTICAL_MEAN * CM.PERFORMANCE_INDEX)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-5c621751462c
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ML_FEATURE_2
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: VARIANCE(CC.EXPONENTIAL_SMOOTHING)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-6060b92e4a4b
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ML_FEATURE_3
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: MAX(CC.COMPLEXITY_SCORE) - MIN(CC.COMPLEXITY_SCORE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-67c42c18a5b6
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ENSEMBLE_PREDICTION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: (AVG(PA.PREDICTED_LTV) + AVG(PA.DEMAND_FORECAST)) / 2
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-6a65b8d04cea
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ANOMALY_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ABS(AVG(CC.MOVING_CORRELATION) - AVG(CC.STATISTICAL_MEAN)) / NULLIF(AVG(CC.STATISTICAL_STDDEV), 0)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-2d78-779a-b40e-6f9fc49b2e16
+          stepCounter: ba519fc8-2368-4de3-8cb1-da65f288783e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: OPTIMIZATION_TARGET
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(CM.RISK_ADJUSTED_PROFIT * CC.PERCENTILE_RANK)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: FACT_COMPREHENSIVE_METRICS
+          - locationName: TARGET
+            nodeName: MART_PREDICTIVE_ANALYTICS
+          - locationName: TARGET
+            nodeName: STG_COMPLEX_CALCULATIONS
+          - locationName: TARGET
+            nodeName: STG_SUPPLY_CHAIN_METRICS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'STG_COMPLEX_CALCULATIONS') }} CC
+            LEFT JOIN {{ ref('TARGET', 'FACT_COMPREHENSIVE_METRICS') }} CM ON CC.SEGMENT_TIER = CM.CUSTOMER_SEGMENT_TIER
+            LEFT JOIN {{ ref('TARGET', 'MART_PREDICTIVE_ANALYTICS') }} PA ON CM.FINANCIAL_KEY = PA.PREDICTION_KEY
+            LEFT JOIN {{ ref('TARGET', 'STG_SUPPLY_CHAIN_METRICS') }} SC ON CM.ORDER_KEY = SC.SUPPLIER_KEY
+            GROUP BY CC.SEGMENT_TIER, PA.GROWTH_POTENTIAL, SC.NATION_NAME
+        name: STG_NODE
+        noLinkRefs: []
+  name: MART_ADVANCED_ANALYTICS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

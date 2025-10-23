@@ -1,0 +1,154 @@
+fileVersion: 1
+id: b4c27830-b3b0-4f69-8555-33a7d979a06e
+name: AGG_COMPETITIVE_ANALYSIS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Competitive analysis with market share and pricing intelligence
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-4375de1071e6
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: BRAND
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.BRAND
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-44114b03f7e7
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: PART_TYPE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: P.PART_TYPE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-48d22c7a3064
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MARKET_SHARE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(S.EXTENDED_PRICE) * 100.0 / SUM(SUM(S.EXTENDED_PRICE)) OVER (PARTITION BY P.PART_TYPE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-4e9cb24d480f
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVERAGE_PRICE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(S.EXTENDED_PRICE / S.QUANTITY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-5134e4e3b972
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PRICE_COMPETITIVENESS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(S.EXTENDED_PRICE / S.QUANTITY) / AVG(AVG(S.EXTENDED_PRICE / S.QUANTITY)) OVER (PARTITION BY P.PART_TYPE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-54a5da80e3ac
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: VOLUME_RANK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: RANK() OVER (PARTITION BY P.PART_TYPE ORDER BY SUM(S.QUANTITY) DESC)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-5a410f57a945
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: LIFECYCLE_STAGE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PL.LIFECYCLE_STAGE
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-d97c-771e-ba20-5d73dd179fe7
+          stepCounter: b4c27830-b3b0-4f69-8555-33a7d979a06e
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_NATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUP.NATION_NAME
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          P: 3ff1fb47-ca09-4d29-bdfd-7532a11d0883
+          PL: 910f4ab5-0bf4-4941-8dc8-068c21157652
+          S: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+          SUP: eb8857be-0404-4ae4-9728-d7b58c5e5a69
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: DIM_PART
+          - locationName: TARGET
+            nodeName: DIM_SUPPLIER
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+          - locationName: TARGET
+            nodeName: STG_PRODUCT_LIFECYCLE
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'DIM_PART') }} P
+            LEFT JOIN {{ ref('TARGET', 'FACT_SALES_DETAIL') }} S ON P.PART_KEY = S.PART_KEY
+            LEFT JOIN {{ ref('TARGET', 'STG_PRODUCT_LIFECYCLE') }} PL ON P.PART_KEY = PL.PART_KEY
+            LEFT JOIN {{ ref('TARGET', 'DIM_SUPPLIER') }} SUP ON S.SUPPLIER_KEY = SUP.SUPPLIER_KEY
+            WHERE P.BRAND IS NOT NULL
+            GROUP BY P.BRAND, P.PART_TYPE, SUP.NATION_NAME, PL.LIFECYCLE_STAGE
+        name: AGG_COMPETITIVE_ANALYSIS
+        noLinkRefs: []
+  name: AGG_COMPETITIVE_ANALYSIS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

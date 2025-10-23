@@ -1,0 +1,147 @@
+fileVersion: 1
+id: 0ddff65d-6e83-4334-ba3a-442267390005
+name: STG_COMPLEX_CALCULATIONS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Complex mathematical calculations with statistical functions and window operations
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-b4640d806f44
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CALCULATION_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY CM.ORDER_DATE, CM.CUSTOMER_SEGMENT_TIER)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-b878d0f6565a
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SEGMENT_TIER
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CM.CUSTOMER_SEGMENT_TIER
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-becee8a5a0f8
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: STATISTICAL_MEAN
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(CM.PERFORMANCE_INDEX) OVER (PARTITION BY CM.CUSTOMER_SEGMENT_TIER)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-c2a117b97db6
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: STATISTICAL_STDDEV
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: STDDEV(CM.RISK_ADJUSTED_PROFIT) OVER (PARTITION BY DO.CUSTOMER_REGION)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-c451939f8f5f
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: PERCENTILE_RANK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: PERCENT_RANK() OVER (ORDER BY CM.STRATEGIC_IMPORTANCE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-cb63d3abd0d1
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: MOVING_CORRELATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CORR(CM.PREDICTED_VALUE, DO.DAILY_REVENUE) OVER (PARTITION BY CM.CUSTOMER_SEGMENT_TIER ORDER BY CM.ORDER_DATE ROWS BETWEEN 29 PRECEDING AND CURRENT ROW)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-cf9993052f82
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: EXPONENTIAL_SMOOTHING
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(CM.RISK_ADJUSTED_PROFIT * POWER(0.9, ROW_NUMBER() OVER (PARTITION BY CM.CUSTOMER_SEGMENT_TIER ORDER BY CM.ORDER_DATE DESC) - 1))
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-12a1-7719-bd09-d286cbc25c7c
+          stepCounter: 0ddff65d-6e83-4334-ba3a-442267390005
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: COMPLEXITY_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: LOG(ABS(CM.PERFORMANCE_INDEX) + 1) * SQRT(CM.STRATEGIC_IMPORTANCE) + SIN(RADIANS(PL.SEASONAL_INDEX * 360))
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases: {}
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: AGG_DAILY_OPERATIONS
+          - locationName: TARGET
+            nodeName: FACT_COMPREHENSIVE_METRICS
+          - locationName: TARGET
+            nodeName: STG_PRODUCT_LIFECYCLE
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_COMPREHENSIVE_METRICS') }} CM
+            LEFT JOIN {{ ref('TARGET', 'AGG_DAILY_OPERATIONS') }} DO ON CM.ORDER_DATE = DO.OPERATION_DATE
+            LEFT JOIN {{ ref('TARGET', 'STG_PRODUCT_LIFECYCLE') }} PL ON CM.ORDER_KEY = PL.PART_KEY
+            WHERE CM.PERFORMANCE_INDEX > 0
+            GROUP BY CM.CUSTOMER_SEGMENT_TIER, DO.CUSTOMER_REGION, PL.LIFECYCLE_STAGE, CM.ORDER_DATE
+        name: STG_NODE
+        noLinkRefs: []
+  name: STG_COMPLEX_CALCULATIONS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

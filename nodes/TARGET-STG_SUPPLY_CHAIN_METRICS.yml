@@ -1,0 +1,154 @@
+fileVersion: 1
+id: 96d22ee3-7842-4805-a648-22b30f43e062
+name: STG_SUPPLY_CHAIN_METRICS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Comprehensive supply chain performance metrics with lead times and costs
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-df6099926280
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: SUPPLIER_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.SUPPLIER_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-e0795e61b18f
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.SUPPLIER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-e474ffc1881c
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AVG_LEAD_TIME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: AVG(SI.DAYS_TO_SHIP)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-ea5bee36f2e7
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: COST_EFFICIENCY_RATIO
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(PS.SUPPLY_COST) * 1.0 / NULLIF(SUM(PS.AVAILABLE_QUANTITY), 0)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-ed279392f1c8
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: RELIABILITY_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: COUNT(CASE WHEN SI.SHIP_MODE = 'TRUCK' THEN 1 END) * 100.0 / NULLIF(COUNT(SI.ORDER_KEY), 0)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-f3c7c32a547e
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: CAPACITY_UTILIZATION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(PS.AVAILABLE_QUANTITY) * 1.0 / (COUNT(DISTINCT PS.PART_KEY) * 1000)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-f722b31a6f11
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: N.NATION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-4ffa-746f-92e0-fa479fc311bc
+          stepCounter: 96d22ee3-7842-4805-a648-22b30f43e062
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: REGION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: N.REGION_NAME
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          "N": b4ad0b27-b2ad-4e9a-8b69-172ced03408f
+          PS: 0a8b574f-bf25-49ed-8206-0195ecad0fe6
+          S: eb8857be-0404-4ae4-9728-d7b58c5e5a69
+          SI: 26c59cde-a7c2-4d4b-9039-e125f0e287d4
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: DIM_NATION
+          - locationName: TARGET
+            nodeName: DIM_SUPPLIER
+          - locationName: TARGET
+            nodeName: STG_PART_SUPPLIER
+          - locationName: TARGET
+            nodeName: STG_SHIPPED_ITEMS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'DIM_SUPPLIER') }} S
+            LEFT JOIN {{ ref('TARGET', 'STG_PART_SUPPLIER') }} PS ON S.SUPPLIER_KEY = PS.SUPPLIER_KEY
+            LEFT JOIN {{ ref('TARGET', 'STG_SHIPPED_ITEMS') }} SI ON PS.PART_KEY = SI.PART_KEY
+            LEFT JOIN {{ ref('TARGET', 'DIM_NATION') }} N ON S.NATION_KEY = N.NATION_KEY
+            WHERE S.SUPPLIER_ACCOUNT_BALANCE > 0
+            GROUP BY S.SUPPLIER_KEY, S.SUPPLIER_NAME, N.NATION_NAME, N.REGION_NAME
+        name: STG_SUPPLY_CHAIN_METRICS
+        noLinkRefs: []
+  name: STG_SUPPLY_CHAIN_METRICS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

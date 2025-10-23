@@ -1,0 +1,172 @@
+fileVersion: 1
+id: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+name: AGG_DAILY_OPERATIONS
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Daily operational metrics with rolling averages and variance analysis
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9138-f9396e5ff1af
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: DATE
+        description: ""
+        name: OPERATION_DATE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-7b59-7521-aa94-c3cd85ad9b13
+                stepCounter: e6af582a-197e-4397-a514-6da473a5af3d
+            transform: D.DATE_KEY
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9138-ff1e848990e9
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DAY_OF_WEEK
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: DAYOFWEEK(D.DATE_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9139-035d20987dce
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DAILY_REVENUE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: SUM(F.EXTENDED_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9139-049cc436aeda
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DAILY_ORDERS
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-d209f9f5e3e9
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: COUNT(DISTINCT F.ORDER_KEY)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9139-087696d83ed4
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: ROLLING_7_DAY_AVG
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: AVG(SUM(F.EXTENDED_PRICE)) OVER (ORDER BY D.DATE_KEY ROWS BETWEEN 6 PRECEDING AND CURRENT ROW)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9139-0ee0f2aa101a
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: REVENUE_VARIANCE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11cc-892c-7389-80bb-e943aeb9a996
+                stepCounter: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+            transform: VARIANCE(F.EXTENDED_PRICE)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9139-12b86433c84c
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11c9-a6e9-773b-a0c5-31ef2120cd78
+                stepCounter: d853a8fe-3ea0-4306-a4b5-555f23879dde
+            transform: C.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11de-6660-7399-9139-1542bc0ab780
+          stepCounter: d5e1bb1b-0604-48c8-8058-ad1f872f9203
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_REGION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences:
+              - columnCounter: 019a11c9-971b-70bb-9109-08a5d0d1ada6
+                stepCounter: eb8857be-0404-4ae4-9728-d7b58c5e5a69
+            transform: S.REGION_NAME
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          C: d853a8fe-3ea0-4306-a4b5-555f23879dde
+          D: e6af582a-197e-4397-a514-6da473a5af3d
+          F: c4a0a5ab-eaaa-49f7-9294-96518c9b3ea9
+          O: d74db29e-729d-43dd-8a9e-14fc66784946
+          S: eb8857be-0404-4ae4-9728-d7b58c5e5a69
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: DIM_CUSTOMER
+          - locationName: TARGET
+            nodeName: DIM_DATE
+          - locationName: TARGET
+            nodeName: DIM_SUPPLIER
+          - locationName: TARGET
+            nodeName: FACT_SALES_DETAIL
+          - locationName: TARGET
+            nodeName: STG_ORDERS_FILTERED
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'FACT_SALES_DETAIL') }} F
+            LEFT JOIN {{ ref('TARGET', 'DIM_DATE') }} D ON F.SHIP_DATE = D.DATE_KEY
+            LEFT JOIN {{ ref('TARGET', 'DIM_CUSTOMER') }} C ON F.CUSTOMER_KEY = C.CUSTOMER_KEY
+            LEFT JOIN {{ ref('TARGET', 'DIM_SUPPLIER') }} S ON F.SUPPLIER_KEY = S.SUPPLIER_KEY
+            LEFT JOIN {{ ref('TARGET', 'STG_ORDERS_FILTERED') }} O ON F.ORDER_KEY = O.ORDER_KEY
+            WHERE D.IS_WEEKEND = FALSE
+            GROUP BY D.DATE_KEY, DAYOFWEEK(D.DATE_KEY), C.REGION_NAME, S.REGION_NAME
+        name: AGG_DAILY_OPERATIONS
+        noLinkRefs: []
+  name: AGG_DAILY_OPERATIONS
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node

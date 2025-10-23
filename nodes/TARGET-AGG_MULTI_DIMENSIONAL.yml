@@ -1,0 +1,157 @@
+fileVersion: 1
+id: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+name: AGG_MULTI_DIMENSIONAL
+operation:
+  config:
+    insertStrategy: INSERT
+    postSQL: ""
+    preSQL: ""
+    testsEnabled: true
+    truncateBefore: true
+  database: ""
+  deployEnabled: true
+  description: Multi-dimensional aggregations with cube operations and hierarchical rollups
+  isMultisource: false
+  locationName: TARGET
+  materializationType: table
+  metadata:
+    appliedNodeTests: []
+    columns:
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-a2839eae94d9
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: DIMENSION_KEY
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: ROW_NUMBER() OVER (ORDER BY R.REGION_NAME, N.NATION_NAME)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-a63de51b6536
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: REGION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: R.REGION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-a852063e184a
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: NATION_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: N.NATION_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-af6451dbc79e
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: CUSTOMER_SEGMENT
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: C.MARKET_SEGMENT
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-b027bc8af015
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: VARCHAR
+        description: ""
+        name: SUPPLIER_NAME
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: S.SUPPLIER_NAME
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-b51158b72f75
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: HIERARCHICAL_LEVEL
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: CASE WHEN R.REGION_NAME IS NULL THEN 0 WHEN N.NATION_NAME IS NULL THEN 1 WHEN C.CUSTOMER_SEGMENT IS NULL THEN 2 WHEN S.SUPPLIER_NAME IS NULL THEN 3 ELSE 4 END
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-ba0bf6d33f5d
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: AGGREGATED_ML_SCORE
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(MA.ML_FEATURE_1 + MA.ML_FEATURE_2 + MA.ML_FEATURE_3)
+      - appliedColumnTests: {}
+        columnReference:
+          columnCounter: 019a11df-5a2a-76f9-b46c-be316afa8925
+          stepCounter: dbebb8a1-4ee7-4f17-9f19-c918b42bbdd7
+        config: {}
+        dataType: NUMBER
+        description: ""
+        name: WEIGHTED_PREDICTION
+        nullable: true
+        sourceColumnReferences:
+          - columnReferences: []
+            transform: SUM(MA.ENSEMBLE_PREDICTION * MA.ANOMALY_SCORE) / NULLIF(SUM(MA.ANOMALY_SCORE), 0)
+    cteString: ""
+    description: ""
+    destinationName: ""
+    enabledColumnTestIDs: []
+    materializationOption: ""
+    sourceMapping:
+      - aliases:
+          C: d853a8fe-3ea0-4306-a4b5-555f23879dde
+          MA: ba519fc8-2368-4de3-8cb1-da65f288783e
+          "N": b4ad0b27-b2ad-4e9a-8b69-172ced03408f
+          R: 1c640689-02ed-4d85-9107-2e84b478ff5b
+          S: eb8857be-0404-4ae4-9728-d7b58c5e5a69
+        customSQL:
+          customSQL: ""
+        dependencies:
+          - locationName: TARGET
+            nodeName: DIM_CUSTOMER
+          - locationName: TARGET
+            nodeName: DIM_NATION
+          - locationName: TARGET
+            nodeName: DIM_REGION
+          - locationName: TARGET
+            nodeName: DIM_SUPPLIER
+          - locationName: TARGET
+            nodeName: MART_ADVANCED_ANALYTICS
+        join:
+          joinCondition: |-
+            FROM {{ ref('TARGET', 'MART_ADVANCED_ANALYTICS') }} MA
+            LEFT JOIN {{ ref('TARGET', 'DIM_CUSTOMER') }} C ON MA.SEGMENT_TIER = C.MARKET_SEGMENT
+            LEFT JOIN {{ ref('TARGET', 'DIM_SUPPLIER') }} S ON MA.ANALYTICS_KEY = S.SUPPLIER_KEY
+            LEFT JOIN {{ ref('TARGET', 'DIM_NATION') }} N ON C.NATION_KEY = N.NATION_KEY
+            LEFT JOIN {{ ref('TARGET', 'DIM_REGION') }} R ON N.REGION_KEY = R.REGION_KEY
+            GROUP BY ROLLUP(R.REGION_NAME, N.NATION_NAME, C.MARKET_SEGMENT, S.SUPPLIER_NAME)
+        name: STG_NODE
+        noLinkRefs: []
+  name: AGG_MULTI_DIMENSIONAL
+  overrideSQL: false
+  schema: ""
+  sqlType: Stage
+  type: sql
+  version: 1
+type: Node
