@@ -251,7 +251,7 @@ operation:
             nodeName: STG_ORDERS_FILTERED
         join:
           joinCondition: FROM {{ ref('TARGET', 'STG_ORDERS_FILTERED') }} O
-        name: DIM_NODE
+        name: DIM_DATE
         noLinkRefs: []
   name: DIM_DATE
   overrideSQL: false
